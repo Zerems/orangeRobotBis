@@ -1,0 +1,13 @@
+{
+  "name": "robot-framework-tests",
+  "version": "1.0.0",
+  "scripts": {
+    "test:all": "robot -d ./Results ./Tests",
+    "test:connexion": "robot -d ./Results ./Tests/connexionTest.robot",
+    "test:parcours": "robot -d ./Results ./Tests/parcoursAchatTest.robot",
+    "clean_log": "rmdir /s /q Results 2>nul || echo Dossier nettoyé"
+  },
+  "devDependencies": {
+    "robotframework": "latest"
+  }
+}

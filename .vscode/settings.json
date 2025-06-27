@@ -1,0 +1,5 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
+  "robot.python.env": "${workspaceFolder}/venv/Scripts/python.exe",
+  "robot.language-server.python": "${workspaceFolder}/venv/Scripts/python.exe"
+}
