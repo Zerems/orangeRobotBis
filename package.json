@@ -2,9 +2,9 @@
   "name": "robot-framework-tests",
   "version": "1.0.0",
   "scripts": {
-    "test:all": "robot -d ./Results ./Tests",
-    "test:connexion": "robot -d ./Results ./Tests/connexionTest.robot",
-    "test:parcours": "robot -d ./Results ./Tests/parcoursAchatTest.robot",
+    "test:all": "robot -d ./Results ./Tests && cd Results && start report.html",
+    "test:connexion": "robot -d ./Results ./Tests/connexionTest.robot && cd Results && start report.html",
+    "test:parcours": "robot -d ./Results ./Tests/parcoursAchatTest.robot && cd Results && start report.html",
     "clean_log": "rmdir /s /q Results 2>nul || echo Dossier nettoyé"
   },
   "devDependencies": {
