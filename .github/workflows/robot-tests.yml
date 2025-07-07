@@ -93,15 +93,6 @@ jobs:
           echo "JUnit file created successfully:"
           head -10 Results/junit.xml
         fi
-
-    - name: Show failed tests (if any)
-      if: failure()
-      run: |
-        if [ -f "Results/output.xml" ]; then
-          cat Results/output.xml | grep -i failures || echo "No failures found in output.xml"
-        else
-          echo "No output.xml file found"
-        fi
         
     - name: Upload test results
       uses: actions/upload-artifact@v4

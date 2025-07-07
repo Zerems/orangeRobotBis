@@ -8,21 +8,22 @@ Resource    ../Ressource/variablesAPI.robot
 Suite Teardown   Delete All Sessions
 
 *** Test Cases ***
-Create A New Pet
-    Create Pet    ${PET_ID}    ${PET_NAME}    ${STATUS}
+Create A New Contact
+    Create Contact    ${FIRST_NAME}    ${LAST_NAME}    ${LOCALE}    ${EMAIL}
     Sleep    5s
 
-Read The Created Pet
+Read The Created Contact
     Sleep    5s
-    ${pet}=    Get Pet    ${PET_ID}    ${PET_NAME}
-    Should Be Equal    ${pet['name']}    ${PET_NAME}
+    ${contact}=    Get Contact    ${contact_id}    ${FIRST_NAME}
+    Should Be Equal    ${contact['first_name']}    ${FIRST_NAME}
 
-Update The Pet
+Update The Contact
     Sleep    5S
-    Update Pet Name    ${PET_ID}    ${UPDATED_NAME}
-    ${pet}=    Get Pet    ${PET_ID}    ${UPDATED_NAME}
-    Should Be Equal    ${pet['name']}    ${UPDATED_NAME}
+    Update Contact First Name    ${UPDATED_FIRST_NAME}    ${contact_id}    ${FIRST_NAME}
+    ${contact}=    Get Contact    ${contact_id}    ${UPDATED_FIRST_NAME}
+    Should Be Equal    ${contact['first_name']}    ${UPDATED_FIRST_NAME}
 
-Delete The Pet
+
+Delete The Contact
     Sleep    5s
-    Delete Pet    ${PET_ID}
+    Delete Contact    ${contact_id}
