@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [ main, master, develop ]
 
+# Permissions nécessaires pour publier les résultats
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   robot-tests:
     runs-on: ubuntu-latest
@@ -61,7 +67,18 @@ jobs:
         export PATH="/usr/local/bin:$PATH"
         # Options Firefox pour éviter les timeouts
         export FIREFOX_OPTIONS="--headless --no-sandbox --disable-dev-shm-usage --disable-gpu"
-        robot --variable BROWSER:firefox --variable FIREFOX_OPTIONS:"${FIREFOX_OPTIONS}" --variable TIMEOUT:60 --outputdir Results Tests/
+        mkdir -p Results
+        # Générer les résultats au format JUnit XML pour compatibilité
+        robot --variable BROWSER:firefox \
+              --variable FIREFOX_OPTIONS:"${FIREFOX_OPTIONS}" \
+              --variable TIMEOUT:60 \
+              --outputdir Results \
+              --xunit Results/junit.xml \
+              Tests/
+
+    - name: Show failed tests (if any)
+      if: failure()
+      run: cat Results/output.xml | grep -i failure || echo "No failures"
         
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -70,14 +87,16 @@ jobs:
         name: robot-results
         path: Results/
         
+    # Utiliser les fichiers JUnit XML au lieu du format Robot Framework natif
     - name: Publish test results
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
       with:
-        files: Results/output.xml
+        files: Results/junit.xml
+        check_name: "Robot Framework Test Results"
         
     - name: Robot Framework Report
-      uses: joonvena/robotframework-reporter-action@v2.1
+      uses: joonvena/robotframework-reporter-action@v2.4
       if: always()
       with:
         gh_access_token: ${{ secrets.GITHUB_TOKEN }}
