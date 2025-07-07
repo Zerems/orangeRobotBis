@@ -43,7 +43,7 @@ jobs:
       run: |
         export DISPLAY=:99
         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-        robot -d ./Results ./Tests --variable BROWSER:firefox --variable HEADLESS:true
+        robot --variable BROWSER:firefox --variable HEADLESS:true --outputdir ./Results ./Tests/
         
     - name: Upload test results
       uses: actions/upload-artifact@v4
