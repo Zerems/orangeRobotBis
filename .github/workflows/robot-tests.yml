@@ -27,6 +27,7 @@ jobs:
         pip install robotframework-seleniumlibrary
         pip install robotframework-requests
         pip install robotframework-databaselibrary
+        pip install robotframework-faker
         # Ajoutez ici d'autres dépendances spécifiques à votre projet
         
     - name: Install Firefox and GeckoDriver
