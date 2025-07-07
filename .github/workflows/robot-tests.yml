@@ -122,7 +122,7 @@ jobs:
       if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
       uses: joonvena/robotframework-reporter-action@v2.4
       with:
-        gh_access_token: ${{ secrets.GITHUB_TOKEN }}
+        gh_access_token: ${{ secrets.GH_PAT }}
         report_path: Results
 
     - name: Fail workflow if tests failed
