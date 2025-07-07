@@ -47,7 +47,7 @@ jobs:
         robot -d ./Results ./Tests --variable BROWSER:firefox --variable HEADLESS:true
         
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: robot-results
