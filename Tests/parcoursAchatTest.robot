@@ -40,4 +40,3 @@ Validate The Basket Shopping With Valid User
     #Assert: Check URL and Message are OK
     Final Page Should Be Open
     Thanks Message Should Be Visible
-    
