@@ -2,9 +2,9 @@ name: Robot Framework Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main, master, develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ main, master, develop ]
 
 jobs:
   robot-tests:
@@ -27,7 +27,7 @@ jobs:
         pip install robotframework-seleniumlibrary
         pip install robotframework-requests
         pip install robotframework-databaselibrary
-        pip install robotframework-faker
+        # Ajoutez ici d'autres dépendances spécifiques à votre projet
         
     - name: Install Firefox and GeckoDriver
       run: |
@@ -38,29 +38,34 @@ jobs:
         wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/$GECKO_VERSION/geckodriver-$GECKO_VERSION-linux64.tar.gz
         sudo tar -xzf /tmp/geckodriver.tar.gz -C /usr/local/bin/
         sudo chmod +x /usr/local/bin/geckodriver
+        # Vérifier l'installation
+        firefox --version
+        geckodriver --version
+        which firefox
         
     - name: Run Robot Framework tests
       run: |
         export DISPLAY=:99
         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-        robot --variable BROWSER:firefox --variable HEADLESS:true --outputdir ./Results ./Tests/
+        sleep 3
+        robot --variable BROWSER:firefox --variable HEADLESS:true --variable FIREFOX_BINARY:/usr/bin/firefox --outputdir Results Tests/
         
     - name: Upload test results
       uses: actions/upload-artifact@v4
       if: always()
       with:
         name: robot-results
-        path: ./Results
+        path: Results/
         
     - name: Publish test results
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
       with:
-        files: ./Results/output.xml
+        files: Results/output.xml
         
     - name: Robot Framework Report
       uses: joonvena/robotframework-reporter-action@v2.1
       if: always()
       with:
         gh_access_token: ${{ secrets.GITHUB_TOKEN }}
-        report_path: results
+        report_path: Results
