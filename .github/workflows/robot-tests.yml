@@ -49,6 +49,8 @@ jobs:
         export DISPLAY=:99
         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
         sleep 3
+        export MOZ_HEADLESS=1
+        export PATH="/usr/local/bin:$PATH"
         robot --variable BROWSER:firefox --outputdir Results Tests/
         
     - name: Upload test results
