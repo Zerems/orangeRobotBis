@@ -34,8 +34,6 @@ jobs:
         pip install robotframework-requests
         pip install robotframework-databaselibrary
         pip install robotframework-faker
-        # Installer robotframework-junit pour la conversion JUnit
-        pip install robotframework-junit
         # Ajoutez ici d'autres dépendances spécifiques à votre projet
         
     - name: Install Firefox and GeckoDriver
