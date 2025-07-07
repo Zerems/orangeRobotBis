@@ -34,9 +34,10 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y firefox
-        # Télécharger la dernière version de GeckoDriver
-        GECKO_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
-        wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/$GECKO_VERSION/geckodriver-$GECKO_VERSION-linux64.tar.gz
+        # Installer GeckoDriver via snap pour une version stable
+        sudo snap install gecko
+        # Ou télécharger une version spécifique stable
+        wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
         sudo tar -xzf /tmp/geckodriver.tar.gz -C /usr/local/bin/
         sudo chmod +x /usr/local/bin/geckodriver
         # Vérifier l'installation
@@ -48,10 +49,14 @@ jobs:
       run: |
         export DISPLAY=:99
         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-        sleep 3
+        sleep 5
+        # Configuration Firefox pour CI/CD
         export MOZ_HEADLESS=1
+        export MOZ_DISABLE_CONTENT_SANDBOX=1
         export PATH="/usr/local/bin:$PATH"
-        robot --variable BROWSER:firefox --outputdir Results Tests/
+        # Options Firefox pour éviter les timeouts
+        export FIREFOX_OPTIONS="--headless --no-sandbox --disable-dev-shm-usage --disable-gpu"
+        robot --variable BROWSER:firefox --variable FIREFOX_OPTIONS:"${FIREFOX_OPTIONS}" --variable TIMEOUT:60 --outputdir Results Tests/
         
     - name: Upload test results
       uses: actions/upload-artifact@v4
