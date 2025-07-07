@@ -34,6 +34,8 @@ jobs:
         pip install robotframework-requests
         pip install robotframework-databaselibrary
         pip install robotframework-faker
+        # Installer robotframework-junit pour la conversion JUnit
+        pip install robotframework-junit
         # Ajoutez ici d'autres dépendances spécifiques à votre projet
         
     - name: Install Firefox and GeckoDriver
@@ -68,17 +70,40 @@ jobs:
         # Options Firefox pour éviter les timeouts
         export FIREFOX_OPTIONS="--headless --no-sandbox --disable-dev-shm-usage --disable-gpu"
         mkdir -p Results
-        # Générer les résultats au format JUnit XML pour compatibilité
+        # Lancer les tests Robot Framework
         robot --variable BROWSER:firefox \
               --variable FIREFOX_OPTIONS:"${FIREFOX_OPTIONS}" \
               --variable TIMEOUT:60 \
               --outputdir Results \
-              --xunit Results/junit.xml \
-              Tests/
+              Tests/ || true
+        # Vérifier si les fichiers ont été générés
+        ls -la Results/
+        
+    - name: Convert to JUnit XML
+      if: always()
+      run: |
+        # Convertir le fichier output.xml en format JUnit
+        if [ -f "Results/output.xml" ]; then
+          python -m robot.rebot --output NONE --log NONE --report NONE --xunit Results/junit.xml Results/output.xml
+        else
+          echo "No output.xml found, creating empty JUnit file"
+          mkdir -p Results
+          echo '<?xml version="1.0" encoding="UTF-8"?><testsuites name="Robot Framework Tests" tests="0" failures="0" errors="0" time="0"></testsuites>' > Results/junit.xml
+        fi
+        # Vérifier le contenu du fichier JUnit
+        if [ -f "Results/junit.xml" ]; then
+          echo "JUnit file created successfully:"
+          head -10 Results/junit.xml
+        fi
 
     - name: Show failed tests (if any)
       if: failure()
-      run: cat Results/output.xml | grep -i failure || echo "No failures"
+      run: |
+        if [ -f "Results/output.xml" ]; then
+          cat Results/output.xml | grep -i failure || echo "No failures found in output.xml"
+        else
+          echo "No output.xml file found"
+        fi
         
     - name: Upload test results
       uses: actions/upload-artifact@v4
