@@ -49,7 +49,7 @@ jobs:
         export DISPLAY=:99
         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
         sleep 3
-        robot --variable BROWSER:firefox --variable HEADLESS:true --variable FIREFOX_BINARY:/usr/bin/firefox --outputdir Results Tests/
+        robot --variable BROWSER:firefox --variable FIREFOX_BINARY:/usr/bin/firefox --outputdir Results Tests/
         
     - name: Upload test results
       uses: actions/upload-artifact@v4
