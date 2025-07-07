@@ -82,7 +82,7 @@ jobs:
       run: |
         # Convertir le fichier output.xml en format JUnit
         if [ -f "Results/output.xml" ]; then
-          python -m robot.rebot --output NONE --log NONE --report NONE --xunit Results/junit.xml Results/output.xml
+          python -m robot.rebot --output NONE --log NONE --report NONE --xunit Results/junit.xml Results/output.xml || true
         else
           echo "No output.xml found, creating empty JUnit file"
           mkdir -p Results
@@ -124,3 +124,13 @@ jobs:
       with:
         gh_access_token: ${{ secrets.GITHUB_TOKEN }}
         report_path: Results
+
+    - name: Fail workflow if tests failed
+      if: always()
+      run: |
+        if grep -q '<failure' Results/output.xml; then
+           echo "❌ Tests failed, marking the job as failed."
+           exit 1
+        else
+            echo "✅ All tests passed."
+        fi
