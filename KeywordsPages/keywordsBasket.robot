@@ -58,3 +58,4 @@ Thanks Message Should Be Visible
 
 Error Message User Information Should Be Visible
     Element Should Be Visible    ${ERROR_MESSAGE_CHECKOUT}
+    
